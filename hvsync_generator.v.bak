@@ -1,0 +1,30 @@
+module hvsync_generator(
+    input clk,
+    output reg vga_h_sync, vga_v_sync,
+    output reg inDisplayArea,
+    output reg [9:0] hCounter,
+    output reg [8:0] vCounter
+);
+
+always @(posedge clk)
+begin
+    if (hCounter == 799)
+    begin
+        hCounter <= 0;
+        if (vCounter == 524)
+            vCounter <= 0;
+        else
+            vCounter <= vCounter + 1;
+    end
+    else
+        hCounter <= hCounter + 1;
+end
+
+always @(posedge clk)
+begin
+    vga_h_sync <= ~(hCounter >= 656 && hCounter < 752);
+    vga_v_sync <= ~(vCounter >= 490 && vCounter < 492);
+    inDisplayArea <= (hCounter < 640) && (vCounter < 480);
+end
+
+endmodule

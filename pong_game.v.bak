@@ -1,0 +1,23 @@
+module pong_top(
+    input clk50,
+    input quadA, quadB,
+    output vga_h_sync, vga_v_sync,
+    output vga_R, vga_G, vga_B
+);
+
+reg clk25 = 0;
+always @(posedge clk50)
+    clk25 <= ~clk25;  // Divide 50MHz to get 25MHz
+
+pong pong_game(
+    .clk(clk25),
+    .quadA(quadA),
+    .quadB(quadB),
+    .vga_h_sync(vga_h_sync),
+    .vga_v_sync(vga_v_sync),
+    .vga_R(vga_R),
+    .vga_G(vga_G),
+    .vga_B(vga_B)
+);
+
+endmodule
